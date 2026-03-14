@@ -1,0 +1,24 @@
+{
+  "name": "nexus-cli",
+  "version": "1.0.0",
+  "description": "Nexus CRM CLI - Personal relationship intelligence for OpenClaw agent",
+  "bin": {
+    "nexus": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.90.0",
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "typescript": "^5"
+  },
+  "type": "module"
+}
