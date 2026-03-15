@@ -61,7 +61,7 @@ export function formatRelative(dateStr: string | null | undefined): string {
 
 // ── Health / Category colors ─────────────────────────────────────────
 
-export type Health = 'healthy' | 'stale' | 'neglected';
+export type Health = 'healthy' | 'stale' | 'neglected' | 'neutral';
 
 export function healthColor(health: Health): string {
   switch (health) {
@@ -71,6 +71,8 @@ export function healthColor(health: Health): string {
       return chalk.yellow(health);
     case 'neglected':
       return chalk.red(health);
+    case 'neutral':
+      return chalk.gray(health);
     default:
       return chalk.gray(health);
   }
@@ -96,25 +98,31 @@ export function categoryBadge(category: string | null | undefined): string {
 
 // ── Contact health computation ───────────────────────────────────────
 
-const FREQUENCY_DAYS: Record<string, number> = {
-  weekly: 7,
-  biweekly: 14,
-  monthly: 30,
-  quarterly: 90,
-  yearly: 365,
+// Must match HEALTH_THRESHOLDS in lib/constants.ts
+// Format: [healthyDays, staleDays] — beyond staleDays = neglected
+const HEALTH_THRESHOLDS: Record<string, [number, number]> = {
+  weekly: [10, 21],
+  biweekly: [21, 42],
+  monthly: [45, 90],
+  quarterly: [120, 240],
+  yearly: [400, 600],
 };
 
 export function computeHealth(
   lastInteractionAt: string | null | undefined,
   frequencyGoal: string | null | undefined,
 ): Health {
-  if (!lastInteractionAt || !frequencyGoal) return 'neglected';
+  if (!frequencyGoal) return 'neutral';
+  if (!lastInteractionAt) return 'neglected';
 
+  const thresholds = HEALTH_THRESHOLDS[frequencyGoal];
+  if (!thresholds) return 'neutral';
+
+  const [healthyDays, staleDays] = thresholds;
   const days = differenceInDays(new Date(), parseISO(lastInteractionAt));
-  const goal = FREQUENCY_DAYS[frequencyGoal] ?? 30;
 
-  if (days <= goal) return 'healthy';
-  if (days <= goal * 1.5) return 'stale';
+  if (days <= healthyDays) return 'healthy';
+  if (days <= staleDays) return 'stale';
   return 'neglected';
 }
 

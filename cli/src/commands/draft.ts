@@ -1,41 +1,12 @@
 import { Command } from 'commander';
 import { supabase } from '../lib/supabase.js';
+import { resolveContact } from '../lib/resolve-contact.js';
 import {
   printJson,
   printSection,
   printKeyValue,
 } from '../lib/format.js';
 import chalk from 'chalk';
-
-// ── Fuzzy contact resolution ─────────────────────────────────────────
-
-async function resolveContact(nameQuery: string): Promise<any> {
-  const { data, error } = await supabase
-    .from('contacts')
-    .select('id, name')
-    .ilike('name', `%${nameQuery}%`);
-
-  if (error) {
-    console.error('Error searching contacts:', error.message);
-    process.exit(1);
-  }
-
-  if (!data || data.length === 0) {
-    console.error(`No contact found matching "${nameQuery}"`);
-    process.exit(1);
-  }
-
-  if (data.length > 1) {
-    console.error(`Multiple contacts match "${nameQuery}":`);
-    for (const c of data) {
-      console.error(`  - ${c.name}`);
-    }
-    console.error('Please be more specific.');
-    process.exit(1);
-  }
-
-  return data[0];
-}
 
 // ── Default draft text by occasion ───────────────────────────────────
 

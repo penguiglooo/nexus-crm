@@ -169,11 +169,17 @@ export async function logInteraction(interaction: Omit<Interaction, 'id' | 'crea
 
   if (error) throw error;
 
-  // Update last_interaction_at on the contact
-  await supabase
+  // Update last_interaction_at using the actual interaction date (not current time)
+  // so backdated logs reflect correctly in health scoring
+  const interactionTimestamp = new Date(interaction.date).toISOString();
+  const { error: updateError } = await supabase
     .from('contacts')
-    .update({ last_interaction_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+    .update({ last_interaction_at: interactionTimestamp, updated_at: new Date().toISOString() })
     .eq('id', interaction.contact_id);
+
+  if (updateError) {
+    console.error('Warning: could not update last_interaction_at:', updateError.message);
+  }
 
   return data;
 }

@@ -11,9 +11,12 @@ export function formatRelativeTime(date: string | null): string {
   if (days === 0) return 'Today';
   if (days === 1) return 'Yesterday';
   if (days < 7) return `${days} days ago`;
-  if (days < 30) return `${Math.round(days / 7)} weeks ago`;
-  if (days < 365) return `${Math.round(days / 30)} months ago`;
-  return `${Math.round(days / 365)} years ago`;
+  const weeks = Math.round(days / 7);
+  if (days < 30) return `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`;
+  const months = Math.round(days / 30);
+  if (days < 365) return `${months} ${months === 1 ? 'month' : 'months'} ago`;
+  const years = Math.round(days / 365);
+  return `${years} ${years === 1 ? 'year' : 'years'} ago`;
 }
 
 export function daysUntilBirthday(birthday: string): number {
