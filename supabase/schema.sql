@@ -124,14 +124,14 @@ CREATE INDEX idx_message_drafts_occasion ON relationships.message_drafts(occasio
 -- Grant usage on schema
 GRANT USAGE ON SCHEMA relationships TO anon, service_role;
 
--- anon: read-only access on all tables
-GRANT SELECT ON ALL TABLES IN SCHEMA relationships TO anon;
+-- anon: full CRUD (single-user personal app, no auth needed)
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA relationships TO anon;
 
 -- service_role: full CRUD on all tables
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA relationships TO service_role;
 
 -- Ensure future tables in this schema inherit permissions
-ALTER DEFAULT PRIVILEGES IN SCHEMA relationships GRANT SELECT ON TABLES TO anon;
+ALTER DEFAULT PRIVILEGES IN SCHEMA relationships GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO anon;
 ALTER DEFAULT PRIVILEGES IN SCHEMA relationships GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO service_role;
 
 -- ============================================================================

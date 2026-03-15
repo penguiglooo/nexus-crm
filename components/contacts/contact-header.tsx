@@ -116,7 +116,7 @@ export function ContactHeader({
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => handleCopy(contact.phone!, "phone")}
-                    className="flex items-center gap-1.5 transition-colors hover:text-foreground"
+                    className="group flex items-center gap-1.5 transition-colors hover:text-foreground"
                   >
                     <Phone className="h-3.5 w-3.5" />
                     <span>{contact.phone}</span>
@@ -140,7 +140,7 @@ export function ContactHeader({
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => handleCopy(contact.email!, "email")}
-                    className="flex items-center gap-1.5 transition-colors hover:text-foreground"
+                    className="group flex items-center gap-1.5 transition-colors hover:text-foreground"
                   >
                     <Mail className="h-3.5 w-3.5" />
                     <span>{contact.email}</span>
